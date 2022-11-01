@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<%- include(`partials/head`); %>
+<body style="background-repeat:repeat ;background-color: #4158D0;
+background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+">
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNav">
+      <ul class="navbar-nav fs-2 fw-bolder">
+       <li class="nav-item">
+          <a class="nav-link" style="font-size: 2rem; color: black; font-weight: 900; margin-right: 1rem " href="/">WEB2_LAB2</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" style="font-size: 1.2rem; color:black"  href="/comments-safe">Comments_safe</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" style="font-size: 2rem; color:black" href="/comments-vuln">Comments_vuln</a>
+        </li>
+        
+      </ul>
+      <ul class="navbar-nav fs-2 fw-bolder" style="margin-right: 1.8em">
+      </ul>
+    </div>
+  </nav>
+  
+  <button type="button" class="button-59 button-comment btn-warning"
+          style="height: 2em; background-color: #0093E9;
+          background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
+          text-decoration: none;margin: auto 0 auto 0; border-radius: 8px; width: 15em; margin-left: 0.5rem; margin-bottom: 0.25rem"
+          data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-chat-left-dots-fill"
+            style="margin-right: 0.2em;"></i>Dodaj novi komentar</button>
+
+          
+                <% if(komentari.length >0) { %>
+                    <% for(var kom of komentari) { %>
+                <div style="text-align: center; margin-top: 2rem;">
+                    <div class="comment-box" style="margin-left: auto; margin-right: auto; width: 60%;">
+                      <div style="display: flex; justify-content: space-between">
+                        <div class="comment-username"><%= kom.cdate.toLocaleDateString() %> | <%= kom.ctime %></div>
+                      </div>
+                      <div style="display: flex; justify-content: space-between">
+                        <div class="comment-text">
+                          <i class="bi bi-chat-right-dots-fill" style="margin-right: 0.25em;"></i><%- kom.comment_text %>
+                        </div>
+                    </div>
+                    <div class="comment-buttons" style="margin-left: auto; width: 10%;">             
+                      <a class="button-59 button-comment btn-danger" href="/delete/<%= kom.comment_id %>"
+                        style="height: 2em; text-decoration: none;margin: auto 0 auto 0; border-radius: 8px; width: fit-content; margin-left: 0.5rem; margin-bottom: 0.25rem;"><i
+                          class="bi bi-trash" style="margin-right: 0.1em;"></i>Obriši</a>
+                    </div>
+
+                </div> 
+            </div>
+           
+           
+            
+                <% } %>
+                <% } %>
+            
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="margin-top:5rem; ">
+    <div class="modal-dialog" style="background-color: #0093E9; background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);">
+      <div class="modal-content" style="background-color: #0093E9; background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel" style="font-weight: 900;">Dodaj komentar</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/" method="POST">
+            <textarea id="komtekst" name="komtekst" style="width: 100%;" rows="5"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Odustani</button>
+          <button type="submit" class="btn btn-primary">Komentiraj</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
+  integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+  integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous">
+</script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+  integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+</script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+  integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous">
+</script>
+</body>
+</html>

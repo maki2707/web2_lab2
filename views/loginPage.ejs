@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<%- include(`partials/head`); %>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+          aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNav">
+          <ul class="navbar-nav fs-2 fw-bolder">
+            <li class="nav-item">
+              <a class="nav-link" style="font-size: 2rem; color: black; font-weight: 900; margin-right: 1rem " href="/">WEB2_LAB2</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" style="font-size: 1.2rem; color:black"  href="/comments-safe">Comments_safe</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" style="font-size: 1.2rem; color:black" href="/comments-vuln">Comments_vuln</a>
+            </li>            
+          </ul>
+          <ul class="navbar-nav fs-2 fw-bolder" style="margin-right: 1.8em">
+          </ul>
+        </div>
+      </nav>
+<div class="login-box-container">
+    <% if (error) { %>
+        <h2 style="color: red;">Krivi podaci za prijavu</h2>
+    <% } %>
+    <form action="/login" method="post">
+        <h2 style="font-weight: 900; margin-top: 1rem;">Unesite podatke za prijavu</h2>
+        <div class="input-field-username">
+            <input type="text" name="username" id="username" placeholder="U n e s i t e    u s e r n a m e">
+        </div>
+        <div class="input-field-pass">
+            <input type="password" name="password" id="password" placeholder="U n e s i t e    l o z i n k u">
+        </div>
+        <input type="submit" value="Prijava">
+    </form>
+</div>
+
+
+</body>
+</html>
