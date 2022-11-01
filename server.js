@@ -19,11 +19,6 @@ const externalUrl = process.env.RENDER_EXTERNAL_URL;
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 var cookieParser = require('cookie-parser');
 const session = require('express-session')
-
-
-
-
-
 /*********************************************************************************************************************************/
 
 app.set("views", path.join(__dirname, "views"));
@@ -141,4 +136,4 @@ app.get(
 
 
 /****************************** E N D    O F     R  O  U  T  E  S *********************************************************************************/
-app.listen(3000)
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));
