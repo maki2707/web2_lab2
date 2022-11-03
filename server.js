@@ -115,7 +115,10 @@ app.post("/login", async function (req, res) {
         sess=req.session;
         sess.user=username;
         res.redirect(`/`);
-    }   
+    }  
+    else {
+      res.redirect(`/login`);
+    } 
   }
 );
 
