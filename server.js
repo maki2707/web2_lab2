@@ -18,7 +18,7 @@ const {
 const externalUrl = process.env.RENDER_EXTERNAL_URL;
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 var cookieParser = require('cookie-parser');
-const session = require('express-session')
+const session = require('cookie-session')
 /*********************************************************************************************************************************/
 
 app.set("views", path.join(__dirname, "views"));
@@ -32,13 +32,9 @@ app.use(cookieParser());
 
 app.use(session(
     {
-    secret: process.env.SECRET,
+    keys:[process.env.SECRET],
     saveUninitialized: false,
-    cookie: {
-        secure: false,
-        httpOnly: false,
-        maxAge: 1000 * 60 * 60 * 24,
-    },
+    maxAge: 1000 * 60 * 60 * 24,
     skipSilentLogin:false
 }));
 
@@ -59,7 +55,6 @@ app.get('/', async function (req, res){
     
 });
 app.get('/login', async function (req, res){  
-   console.log(req.session.user)
     res.render("loginPage", {
         title: "Prijava", 
         error: false
@@ -77,22 +72,13 @@ app.get('/comments-safe', async function (req, res){
     }) 
 });
 
-app.get('/comments-vuln', async function (req, res){  
-    
+app.get('/comments-vuln', async function (req, res){   
     let komentari = null;
     komentari = ( await db.query("select * FROM comments order by ctime")).rows;
     res.render("comments_vuln", {
     title: "Comments",
     linkActive: "comments-vuln", 
     komentari: komentari,
-    }) 
-});
-
-app.get('/html-vuln', async function (req, res){     
-    var favnum = 55; 
-    res.render("html_vuln", {
-    title: "HTML-vuln",  
-    favnum : favnum
     }) 
 });
 
@@ -123,16 +109,14 @@ app.post("/login", async function (req, res) {
 );
 
 app.get('/logout', function (req, res) {
-    delete req.session.user;
-    console.log(req.session.user)
+    req.session = null
     res.redirect('/login');
   });
-
 
 app.get(
     "/delete/:id([0-9]{1,13})", requiresAuth(), async function (req, res) {
     let id = parseInt(req.params.id);       
-    await db.query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *`, [id,]);
+    await db.query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *`, [id]);
     res.redirect(`/`);
   }
   );
