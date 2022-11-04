@@ -123,4 +123,12 @@ app.get(
 
 
 /****************************** E N D    O F     R  O  U  T  E  S *********************************************************************************/
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+if (externalUrl) {
+  const hostname = "127.0.0.1";
+  app.listen(port, hostname, () => {
+    console.log(`Server locally running at http://${hostname}:${port}/ and from
+    outside on ${externalUrl}`);
+  });
+} else {
+  app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+}
