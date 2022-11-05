@@ -19,6 +19,8 @@ const externalUrl = process.env.RENDER_EXTERNAL_URL;
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 var cookieParser = require('cookie-parser');
 const session = require('cookie-session')
+const csrf = require('csurf')
+const bodyParser = require('body-parser')
 /*********************************************************************************************************************************/
 
 app.set("views", path.join(__dirname, "views"));
@@ -27,7 +29,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({
   extended: true
 })); 
-
+const csrfProtect = csrf({cookie: true})
+const formParser = bodyParser.urlencoded({extended: false})
 app.use(cookieParser());
 
 app.use(session(
@@ -35,7 +38,8 @@ app.use(session(
     keys:[process.env.SECRET],
     saveUninitialized: false,
     maxAge: 1000 * 60 * 60 * 24,
-    skipSilentLogin:false
+    skipSilentLogin:false,
+    httpOnly:false
 }));
 
 
@@ -45,22 +49,33 @@ app.get('/', async function (req, res){
     sess = req.session;
     if(sess.user)
     {
+        console.log(sess)
         res.render("introPage", {
             title: "Intro", 
             sess: sess,       
         }) 
     } else {
-        res.redirect("/login")
+      var user = (await db.query("select * FROM users")).rows.shift();
+      res.render("loginPage", {
+        title: "Prijava", 
+        error: false,
+        baseUser: user.username,
+        basePass: user.password,
+        baseEmail: user.email
+    })
     }
     
 });
 app.get('/login', async function (req, res){  
-    res.render("loginPage", {
-        title: "Prijava", 
-        error: false
-        })
+  var user = (await db.query("select * FROM users")).rows.shift();
+  res.render("loginPage", {
+      title: "Prijava", 
+      error: false,
+      baseUser: user.username,
+      basePass: user.password,
+      baseEmail: user.email
+  })
 });
-
 
 app.get('/comments-safe', async function (req, res){ 
     let komentari = null;
@@ -103,15 +118,36 @@ app.post("/login", async function (req, res) {
         res.redirect(`/`);
     }  
     else {
-      res.redirect(`/login`);
+      var user = (await db.query("select * FROM users")).rows.shift();
+      res.render("loginPage", {
+        title: "Prijava", 
+        error: true,
+        baseUser: user.username,
+        basePass: user.password,
+        baseEmail: user.email
+    })
     } 
   }
 );
 
-app.get('/logout', function (req, res) {
-    req.session = null
-    res.redirect('/login');
+app.get('/logout', async function (req, res) {
+  req.session = null
+  var user = (await db.query("select * FROM users")).rows.shift();
+  res.render("loginPage", {
+      title: "Prijava", 
+      error: false,
+      baseUser: user.username,
+      basePass: user.password,
+      baseEmail: user.email
+  })
   });
+
+app.get('/usernamechange',csrfProtect, async function (req, res) {
+  res.render("usernameChange", {
+    title: "Promjena korisničkog imena", 
+    csrfToken: req.csrfToken()
+  })
+});
 
 app.get(
     "/delete/:id([0-9]{1,13})", requiresAuth(), async function (req, res) {
@@ -120,6 +156,19 @@ app.get(
     res.redirect(`/`);
   }
   );
+
+app.post("/changeemailvuln", async function (req, res) {
+    console.log(req.body.email)
+    await db.query(`UPDATE users SET email=$2 WHERE username=$1 RETURNING *`,[req.session.user,req.body.email]);
+    res.redirect(`/`);
+  }
+);
+
+app.post("/changeUserName", formParser, csrfProtect, async function (req, res) {
+  await db.query(`UPDATE users SET username=$2 WHERE username=$1 RETURNING *`,[req.session.user,req.body.username]);
+  res.redirect(`/`);
+}
+);
 
 
 /****************************** E N D    O F     R  O  U  T  E  S *********************************************************************************/
