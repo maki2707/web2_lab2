@@ -39,7 +39,8 @@ app.use(session(
     saveUninitialized: false,
     maxAge: 1000 * 60 * 60 * 24,
     skipSilentLogin:false,
-    httpOnly:false
+    httpOnly:false,
+    sameSite: 'none',   
 }));
 
 
@@ -177,11 +178,13 @@ app.get(
 /*ranjivi */
 app.post("/changeemailvuln", async function (req, res) {
     await db.query(`UPDATE users SET email=$2 WHERE username=$1 RETURNING *`,[req.session.user, req.body.email]);
+    res.redirect(`/`);
   });
 
 /*zaštičeni endpoint*/ 
 app.post("/changeUserName", formParser, csrfProtect, async function (req, res) {
   await db.query(`UPDATE users SET username=$2 WHERE username=$1 RETURNING *`,[req.session.user,req.body.username]);
+  res.redirect(`/`);
 });
 
 
