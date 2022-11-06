@@ -47,12 +47,13 @@ var sess;
 
 app.get('/', async function (req, res){  
     sess = req.session;
+    var user = (await db.query("select * FROM users")).rows.shift();
     if(sess.user)
     {
-        console.log(sess)
         res.render("introPage", {
             title: "Intro", 
             sess: sess,       
+            userdata: user,
         }) 
     } else {
       var user = (await db.query("select * FROM users")).rows.shift();
@@ -63,9 +64,9 @@ app.get('/', async function (req, res){
         basePass: user.password,
         baseEmail: user.email
     })
-    }
-    
+    }    
 });
+
 app.get('/login', async function (req, res){  
   var user = (await db.query("select * FROM users")).rows.shift();
   res.render("loginPage", {
@@ -78,16 +79,33 @@ app.get('/login', async function (req, res){
 });
 
 app.get('/comments-safe', async function (req, res){ 
-    let komentari = null;
-    komentari = ( await db.query("select * FROM comments order by ctime")).rows;
-    res.render("comments_safe", {
-    title: "Comments",
-    linkActive: "comments-safe", 
-    komentari: komentari,   
-    }) 
+    sess = req.session;
+    if(sess.user)
+    {
+      let komentari = null;
+      komentari = ( await db.query("select * FROM comments order by ctime")).rows;
+      res.render("comments_safe", {
+      title: "Comments",
+      linkActive: "comments-safe", 
+      komentari: komentari,   
+      }) 
+    } else {
+      var user = (await db.query("select * FROM users")).rows.shift();
+      res.render("loginPage", {
+          title: "Prijava", 
+          error: false,
+          baseUser: user.username,
+          basePass: user.password,
+          baseEmail: user.email
+      })
+    }
+    
 });
 
-app.get('/comments-vuln', async function (req, res){   
+app.get('/comments-vuln', async function (req, res){ 
+  sess = req.session;
+  if(sess.user)
+  {
     let komentari = null;
     komentari = ( await db.query("select * FROM comments order by ctime")).rows;
     res.render("comments_vuln", {
@@ -95,6 +113,17 @@ app.get('/comments-vuln', async function (req, res){
     linkActive: "comments-vuln", 
     komentari: komentari,
     }) 
+  } else {
+    var user = (await db.query("select * FROM users")).rows.shift();
+    res.render("loginPage", {
+        title: "Prijava", 
+        error: false,
+        baseUser: user.username,
+        basePass: user.password,
+        baseEmail: user.email
+    })
+  }
+   
 });
 
 app.post("/", async function (req, res) {
@@ -104,7 +133,7 @@ app.post("/", async function (req, res) {
       await db.query( "INSERT INTO comments (comment_id, cdate, comment_text, ctime) VALUES ($1, $2, $3, $4) RETURNING *",
         [komentarid, datum, req.body.komtekst, vrijeme]
       );
-      res.redirect(`/`);
+      res.redirect(`/comments-safe`);
     }
 );
 
@@ -142,33 +171,24 @@ app.get('/logout', async function (req, res) {
   })
   });
 
-app.get('/usernamechange',csrfProtect, async function (req, res) {
-  res.render("usernameChange", {
-    title: "Promjena korisničkog imena", 
-    csrfToken: req.csrfToken()
-  })
-});
-
 app.get(
     "/delete/:id([0-9]{1,13})", requiresAuth(), async function (req, res) {
     let id = parseInt(req.params.id);       
     await db.query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *`, [id]);
     res.redirect(`/`);
-  }
-  );
+});
 
+/*ranjivi */
 app.post("/changeemailvuln", async function (req, res) {
     console.log(req.body.email)
     await db.query(`UPDATE users SET email=$2 WHERE username=$1 RETURNING *`,[req.session.user,req.body.email]);
-    res.redirect(`/`);
-  }
-);
+    res.redirect(`/`);});
 
+/*zaštičeni endpoint*/ 
 app.post("/changeUserName", formParser, csrfProtect, async function (req, res) {
   await db.query(`UPDATE users SET username=$2 WHERE username=$1 RETURNING *`,[req.session.user,req.body.username]);
   res.redirect(`/`);
-}
-);
+});
 
 
 /****************************** E N D    O F     R  O  U  T  E  S *********************************************************************************/

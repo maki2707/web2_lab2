@@ -20,7 +20,7 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%) ">
           <a class="nav-link" style="font-size: 1.2rem; color:black" href="/comments-vuln">Komentari - vuln</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" style="font-size: 1.2rem; color:black"  href="/usernamechange">Promjena podataka - vuln</a>
+          <a class="nav-link" style="font-size: 1.2rem; color:black"  href="https://web2-lab2-badserver.onrender.com">CSRF napad</a>
         </li>
         
       </ul>
@@ -33,6 +33,13 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%) ">
   </nav>
   <div style="font-weight: 900; font-size: 2rem;">
     <span style="padding-left: 0.45em; font-weight: 900; font-size: 2rem;" > Dobrodošli na drugi projekt iz kolegija WEB2 na FER-u.
+  </div>
+
+  <div class="tab-desc"><h3 style="margin-left:1rem">Osobni podaci -> ovdje pratite promjene podataka uzrokovane CSRF napadom </h3>
+    <div style="margin-left:1rem; display:flex; flex-direction:row;">
+      <p style="font-weight: bold; margin-right: 0.5rem;">Username: </p> <%= userdata.username %>
+      <p style="font-weight: bold; margin-right: 0.5rem; margin-left: 1rem;">Email: </p> <%= userdata.email %> 
+    </div>
   </div>
 
   <div class="tab-desc"><h3 style="margin-left:1rem">Komentari - safe</h3>
