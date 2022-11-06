@@ -47,7 +47,13 @@ background-image: linear-gradient(0deg, #D9AFD9 0%, #97D9E1 100%) ">
   </div>
  
   <div class="tab-desc"><h3 style="margin-left:1rem">Komentari - vuln</h3>
-    <p style="margin-left:1rem">prikazuje komentare čiji je sadržaj NIJE enkodiran te će rezultirati XSS napadom. Komentari su jednaki onima koji se prikazuju na "Komentari - safe" stranici. </p>
+    <p style="margin-left:1rem">Prikazuje komentare čiji je sadržaj NIJE enkodiran te će rezultirati XSS napadom. Komentari su jednaki onima koji se prikazuju na "Komentari - safe" stranici. </p>
+  </div>
+
+  <div class="tab-desc"><h3 style="margin-left:1rem">CSRF napad</h3>
+    <p style="margin-left:1rem">Poveznica za pokretanje CSRF napada. Inače bi ta poveznica bila podmenuta u komentare kao link na neku stranicu kojoj korisnik vjeruje,
+       čak je moguće da se i prilikom otvaranja na njoj nalazi očekivani sadržaj, ali se zapravo odmah pri pristupanju stranici izvršava napadačev kod za slanjem zahtjeva za npr. promjenu email adrese na vrijednost
+      koju on odabere. Nakon toga bi napadač mogao pomoću novog maila zatražiti "password reset" te bi tako dobio potpuni pristup računu korisnika. </p>
   </div>
     
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

@@ -36,32 +36,31 @@ background-image: linear-gradient(225deg, #FFE53B 0%, #FF2525 74%);">
           data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-chat-left-dots-fill"
             style="margin-right: 0.2em;"></i>Dodaj novi komentar</button>
 
-          
-                <% if(komentari.length >0) { %>
-                    <% for(var kom of komentari) { %>
-                <div style="text-align: center; margin-top: 1rem;">
-                    <div class="comment-box" style="margin-left: auto; margin-right: auto; width: 60%;">
-                      <div style="display: flex; justify-content: space-between">
-                        <div class="comment-username"><%= kom.cdate.toLocaleDateString() %> | <%= kom.ctime %></div>
-                      </div>
-                      <div style="display: flex; justify-content: space-between">
-                        <div class="comment-text">
-                          <i class="bi bi-chat-right-dots-fill" style="margin-right: 0.25em;"></i><%- kom.comment_text %>
-                        </div>
-                    </div>
-                    <div class="comment-buttons" style="margin-left: auto; width: 10%;">             
-                      <a class="button-59 button-comment btn-danger" href="/delete/<%= kom.comment_id %>"
-                        style="height: 2em; text-decoration: none;margin: auto 0 auto 0; border-radius: 8px; width: fit-content; margin-left: 0.5rem; margin-bottom: 0.25rem;"><i
-                          class="bi bi-trash" style="margin-right: 0.1em;"></i>Obriši</a>
-                    </div>
+          <div style="display: flex; flex-direction: column; ">
+            <% if(komentari.length >0) { %>
+              <% for(var kom of komentari) { %>
+          <div style="text-align: center; margin-top: 1rem;">
+              <div class="comment-box" style="margin-left: auto; margin-right: auto; width: 60%;">
+                <div style="display: flex; justify-content: space-between">
+                  <div class="comment-username"><%= kom.cdate.toLocaleDateString() %> | <%= kom.ctime %></div>
+                </div>
+                <div style="display: flex; justify-content: space-between">
+                  <div class="comment-text">
+                    <i class="bi bi-chat-right-dots-fill" style="margin-right: 0.25em;"></i><%- kom.comment_text %>
+                  </div>
+              </div>
+              <div class="comment-buttons" style="margin-left: auto; width: 10%;">             
+                <a class="button-59 button-comment btn-danger" href="/delete/<%= kom.comment_id %>"
+                  style="height: 1.5em; text-decoration: none;margin: auto 0 auto 0; border-radius: 8px; width: fit-content; margin-left: 0.5rem; margin-bottom: 0.25rem;"><i
+                    class="bi bi-trash" style="margin-right: 0.1em;"></i>Obriši</a>
+              </div>
 
-                </div> 
-            </div>
-           
-           
-            
-                <% } %>
-                <% } %>
+          </div> 
+      </div>        
+          <% } %>
+          <% } %>
+          </div>
+                
             
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="margin-top:5rem; ">
     <div class="modal-dialog" style="background-color: #0093E9; background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);">

@@ -97,9 +97,7 @@ app.get('/comments-safe', async function (req, res){
           baseUser: user.username,
           basePass: user.password,
           baseEmail: user.email
-      })
-    }
-    
+      })}  
 });
 
 app.get('/comments-vuln', async function (req, res){ 
@@ -121,9 +119,7 @@ app.get('/comments-vuln', async function (req, res){
         baseUser: user.username,
         basePass: user.password,
         baseEmail: user.email
-    })
-  }
-   
+    })}
 });
 
 app.post("/", async function (req, res) {
@@ -133,7 +129,7 @@ app.post("/", async function (req, res) {
       await db.query( "INSERT INTO comments (comment_id, cdate, comment_text, ctime) VALUES ($1, $2, $3, $4) RETURNING *",
         [komentarid, datum, req.body.komtekst, vrijeme]
       );
-      res.redirect(`/comments-safe`);
+      res.redirect("comments-safe")
     }
 );
 
@@ -172,10 +168,10 @@ app.get('/logout', async function (req, res) {
   });
 
 app.get(
-    "/delete/:id([0-9]{1,13})", requiresAuth(), async function (req, res) {
+    "/delete/:id([0-9]{1,13})",  async function (req, res) {
     let id = parseInt(req.params.id);       
     await db.query(`DELETE FROM comments WHERE comment_id = $1 RETURNING *`, [id]);
-    res.redirect(`/`);
+    res.redirect("/comments-safe")
 });
 
 /*ranjivi */
