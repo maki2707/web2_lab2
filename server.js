@@ -39,8 +39,7 @@ app.use(session(
     saveUninitialized: false,
     maxAge: 1000 * 60 * 60 * 24,
     skipSilentLogin:false,
-    httpOnly:false,
-    sameSite: 'none',   
+    httpOnly:false,   
 }));
 
 
